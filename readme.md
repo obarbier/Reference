@@ -4,8 +4,10 @@ thing. I am creating this sheet so that I don't fall in the bad habbit of googli
 by categories/Technologies
 
 ## Content
-1. [R-language](#R-language)
+1. [R-language](##R-language)
   1. cut {base}
+2.  [GoLang](##GoLang)
+  1. Import
 
 ## R-language
 ### cut {base}
@@ -40,3 +42,43 @@ OrderCons$Period<-cut(OrderCons$ORDER_CREATION_DATE ,
 #### Reference
 1. [rdocumentation](https://www.rdocumentation.org/packages/base/versions/3.6.0/topics/cut)
 2. [stackoverflow](https://stackoverflow.com/questions/45201474/customize-quarterly-dates-on-r)
+
+## GoLang
+
+### Import
+
+Anatomy of and Import declarations
+```
+ImportDeclaration = "import" ImportSpec
+ImportSpec        = [ "." | "_" | Identifier ] ImportPath
+```
+- Identifier is any valid identifier which will be used in qualified identifiers
+- ImportPath is string literal (raw or interpreted)
+- String literal used in import specification (each import declaration contains one or more import specification) tells what package to import. This string is called import path. According to language spec it depends on the implementation how import path (string) is interpreted but in real life it’s path relative package’s vendor directory or `go env GOPATH`/src (more about [GOPATH](https://golang.org/doc/code.html#GOPATH)).
+
+```Go
+import (
+    "math"
+    m "math"
+    . "math"
+    _ "math"
+)
+```
+
+- `import  m "math" `: It’s possible to pass custom package name for import
+- `import . "math` another option which allows to access exported identifier without qualified identifier. Useful in testing
+- Golang’s compiler will yell if package is imported and not used
+-  `import _ "math"`: doesn’t require to use package math in importing file but init function(s) from imported package will be executed anyway (package and it dependencies will be initialized). It’s useful if we’re interested only in bootstrapping work done by imported package but we don’t reference any exported identifiers from it.
+
+#### Circular Import
+Go specification explicitly forbids circular imports — when package imports itself indirectly. The most obvious case is when package a imports package b and package b in turn imports package a
+```
+> go build
+can't load package: import cycle not allowed
+package github.com/mlowicki/a
+    imports github.com/mlowicki/b
+    imports github.com/mlowicki/a
+```
+#### Reference
+1. [Medium Article](https://medium.com/golangspec/import-declarations-in-go-8de0fd3ae8ff)
+2. [Init Function in GO](https://medium.com/golangspec/init-functions-in-go-eac191b3860a)
