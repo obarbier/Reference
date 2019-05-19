@@ -4,6 +4,11 @@
 - Scale the deployment
 - Update the containerized application with a new software version
 - Debug the containerized application
+- Learn about application Deployments
+- Deploy on Kubernetes with kubectl
+- Learn about Kubernetes Pods
+- Learn about Kubernetes Nodes
+- Troubleshoot deployed applications
 
 ### Using Minikube to Create a Cluster
 **Kubernetes coordinates a highly available cluster of computers that are connected to work as a single unit.** The abstractions in Kubernetes allow you to deploy containerized applications to a cluster without tying them specifically to individual machines. To make use of this new model of deployment, applications need to be packaged in a way that decouples them from individual hosts: they need to be containerized. Containerized applications are more flexible and available than in past deployment models, where applications were installed directly onto specific machines as packages deeply integrated into the host. **Kubernetes automates the distribution and scheduling of application containers across a cluster in a more efficient way.** Kubernetes is an open-source platform and is production-ready.
@@ -51,6 +56,7 @@ Example
 In terminal 1 run ``kubectl proxy``
 
 run the following in terminal 2
+
 ``
 export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
 echo Name of the Pod: $POD_NAME
@@ -87,3 +93,18 @@ Deployment, ReplicaSet and Pods are different layers which solve different probl
 - Deployment: It makes sure that you can have different version of Pods and provide the capability to rollback to the previous version
 
 Lastly, It depends on use case how you want to use these concepts or methodology. It's not about which is good or which is bad.
+
+### Viewing Pods and Nodes
+
+<img src="https://d33wubrfki0l68.cloudfront.net/fe03f68d8ede9815184852ca2a4fd30325e5d15a/98064/docs/tutorials/kubernetes-basics/public/images/module_03_pods.svg">
+A **Pod**  is the atomic unit on the Kubernetes platform. It is a group of one or more application containers (such as Docker or rkt) and includes shared storage (volumes), IP address and information about how to run them. A Pod models an application-specific "logical host" and can contain different application containers which are relatively tightly coupled. When we create a Deployment on Kubernetes, that Deployment creates Pods with containers inside them (as opposed to creating containers directly).
+
+A Pod always runs on a Node. A Node is a worker machine in Kubernetes and may be either a virtual or a physical machine, depending on the cluster. Each Node is managed by the Master. A Node can have multiple pods, and the Kubernetes master automatically handles scheduling the pods across the Nodes in the cluster. The Master's automatic scheduling takes into account the available resources on each Node.
+
+<img src="https://d33wubrfki0l68.cloudfront.net/5cb72d407cbe2755e581b6de757e0d81760d5b86/a9df9/docs/tutorials/kubernetes-basics/public/images/module_03_nodes.svg">
+
+Every Kubernetes Node runs at least:
+
+- Kubelet, a process responsible for communication between the Kubernetes Master and the Node; it manages the Pods and the containers running on a machine.
+- A container runtime (like Docker, rkt) responsible for pulling the container image from a registry, unpacking the container, and running the application.
+Containers should only be scheduled together in a single Pod if they are tightly coupled and need to share resources such as disk.
