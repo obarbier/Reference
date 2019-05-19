@@ -35,8 +35,30 @@ Once you have a running Kubernetes cluster, you can deploy your containerized ap
 Applications need to be packaged into one of the supported container formats in order to be deployed on Kubernetes. You can create and manaCreate a Deploymentge a Deployment by using the Kubernetes command line interface, Kubectl. Kubectl uses the Kubernetes API to interact with the cluster.
 #### Create a Deployment
 1. A Kubernetes Pod is a group of one or more Containers, tied together for the purposes of administration and networking. The Pod in this tutorial has only one Container. A Kubernetes Deployment checks on the health of your Pod and restarts the Pod’s Container if it terminates. Deployments are the recommended way to manage the creation and scaling of Pods.
-``` kubectl create deployment hello-node --image=gcr.io/hello-minikube-zero-install/hello-node ```
+``` kubectl run kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcamp:v1 --port=8080 ```
+  The run command creates a new deployment. We need to provide the deployment name and app image location (include the full repository url for images hosted outside Docker hub). We want to run the app on a specific port so we add the --port parameter. This performed a few things for you:
+  - searched for a suitable node where an instance of the application could be run (we have only 1 available node)
+  - scheduled the application to run on that Node
+  - configured the cluster to reschedule the instance on a new Node when needed
+
 2. To get the deployment we just created. ``kubectl get deployments`` and to get Pod information use ``kubectl get pods``. To get events use ``kubectl get events``. And finaly to view kubectl configuration use ``kubectl config view``
+
+#### Accessing Using Proxy
+Pods that are running inside Kubernetes are running on a private, isolated network. By default they are visible from other pods and services within the same kubernetes cluster, but not outside that network. When we use **kubectl**, we're interacting through an API endpoint to communicate with our application.
+The kubectl command can create a proxy that will forward communications into the cluster-wide, private network. The proxy can be terminated by pressing control-C and won't show any output while its running.
+
+Example
+In terminal 1 run ``kubectl proxy``
+
+run the following in terminal 2
+``
+export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+echo Name of the Pod: $POD_NAME
+``
+
+``
+curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME/proxy/
+``
 
 #### Create a Service
 By default, the Pod is only accessible by its internal IP address within the Kubernetes cluster. To make the **hello-node** Container accessible from outside the Kubernetes virtual network, you have to expose the Pod as a Kubernetes Service.
@@ -46,3 +68,22 @@ Example
 ``kubectl expose deployment hello-node --type=LoadBalancer --port=8080``
 
 The **--type=LoadBalancer** flag indicates that you want to expose your Service outside of the cluster. One can view created services using command ``kubectl get services``
+
+### how to apply all of the K8s objects into the k8s cluster
+Reference: [Stack Overflow](https://stackoverflow.com/questions/48015637/kubernetes-kubectl-run-vs-create-and-apply)
+There are several ways to do this job.
+- Using Generators (Run, Expose)
+- Using Imperative way (Create)
+- Using Declarative way (Apply)
+
+All of the above ways have a different purpose and simplicity. For instance, If you want to check quickly whether the container is working as you desired then you might use **Generators**.
+
+If you want to version control the k8s object then it's better to use **declarative** way which helps us to determine the accuracy of data in k8s objects.
+
+Deployment, ReplicaSet and Pods are different layers which solve different problems.All of these concepts provide flexibility to k8s.
+
+- Pods: It makes sure that related containers are together and provide efficiency.
+- ReplicaSet: It makes sure that k8s cluster has desirable replicas of the pods
+- Deployment: It makes sure that you can have different version of Pods and provide the capability to rollback to the previous version
+
+Lastly, It depends on use case how you want to use these concepts or methodology. It's not about which is good or which is bad.
