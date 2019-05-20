@@ -10,6 +10,7 @@ by categories/Technologies
   1. Import
 3. [Python](##Python)
   1. How to Slice Lists/Arrays and Tuples in Python
+  2. unpack operator in Python
 
 ## R-language
 ### cut {base}
@@ -92,6 +93,8 @@ So you've got an list, tuple or array and you want to get specific sets of sub-e
 
 Example
 
+`array[start:stop:increment]`
+
 ```python
 >>> a = [1, 2, 3, 4, 5, 6, 7, 8]
 ```
@@ -128,3 +131,74 @@ There is another form of syntax you can use that may be easier to understand. Th
 ### Reference
 
 1. [Python Central](https://www.pythoncentral.io/how-to-slice-listsarrays-and-tuples-in-python/)
+2. [tech beamers](https://www.techbeamers.com/essential-python-tips-tricks-programmers/)
+
+## Unpack operator in Python
+Applying `*` on any iterable object, by placing it to the left of the object, produces the individual elements of the iterable. If applied on a list-like iterable, it produces the elements of the list in the order they appear in the list. If applied on a dict-like object, it produces the keys of the dict in the order you would get as if you iterated the dict. Applying `**` on any dict-like object, by placing it to the left of the object, produces the individual key-value pairs of the iterable. The order of the key-value pairs produced is in the order you would get as if you iterated the dict.
+
+Example
+
+```python
+def foo(x, y, z):
+    print("First is ", x, " then ", y, " lastly ", z)
+
+a = [1, 50, 99]
+
+foo(a)
+# TypeError: foo() takes exactly 3 arguments (1 given)
+
+foo(*a)
+# First is 1 then 50 lastly 99
+
+b = [[55,66,77], 88, 99]
+foo(*b)
+# First is [55,66,77] then 88 lastly 99
+
+d = {"y": 23, "z": 56, "x": 15}
+
+foo(*d)
+# This passes in the keys of the dict
+# First is z then x lastly y
+
+foo(**d)
+# First is 56 then 15 lastly 23
+```
+Why is dict not in order ? Dictionaries have no order in python. In other words, when you iterate over a dictionary, the order that the keys/items are "yielded" is not the order that you put them into the dictionary. If you want a dictionary that is ordered, you need a collections.OrderedDict
+
+### Special Syntax *args and **kwargs in Python
+The special syntax ***args** in function definitions in python is used to pass a variable number of arguments to a function. It is used to pass a non-keyworded, variable-length argument list. What *args allows you to do is take in more arguments than the number of formal arguments that you previously defined. With *args, any number of extra arguments can be tacked on to your current formal parameters (including zero extra arguments).
+
+The special syntax ****kwargs** in function definitions in python is used to pass a keyworded, variable-length argument list. We use the name kwargs with the double star. The reason is because the double star allows us to pass through keyword arguments (and any number of them).
+
+```python
+def myFun(*argv):
+    for arg in argv:
+        print (arg)
+
+myFun('Hello', 'Welcome', 'to', 'GeeksforGeeks')
+#Hello
+#Welcome
+#to
+#GeeksforGeeks
+
+def myFun(**kwargs):
+    for key, value in kwargs.items():
+        print ("%s == %s" %(key, value))
+
+# Driver code
+myFun(first ='Geeks', mid ='for', last='Geeks')
+#last == Geeks
+#mid == for
+#first == Geeks
+
+d={'y': 23, 'x': 15, 'z': 56}
+myFun(**d)
+#y == 23
+#x == 15
+#z == 56
+```
+
+
+### Reference
+1. [codeyarns](https://codeyarns.com/2012/04/26/unpack-operator-in-python/)
+2. [stackoverflow](https://stackoverflow.com/questions/11784860/why-does-this-python-dictionary-get-created-out-of-order-using-setdefault)
