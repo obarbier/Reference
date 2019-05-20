@@ -4,10 +4,12 @@ thing. I am creating this sheet so that I don't fall in the bad habbit of googli
 by categories/Technologies
 
 ## Content
-1. [R-language](##R-language)
+1. [R-language](## R-language)
   1. cut {base}
-2.  [GoLang](##GoLang)
+2. [GoLang](## GoLang)
   1. Import
+3. [Python](##Python)
+  1. How to Slice Lists/Arrays and Tuples in Python
 
 ## R-language
 ### cut {base}
@@ -82,3 +84,47 @@ package github.com/mlowicki/a
 #### Reference
 1. [Medium Article](https://medium.com/golangspec/import-declarations-in-go-8de0fd3ae8ff)
 2. [Init Function in GO](https://medium.com/golangspec/init-functions-in-go-eac191b3860a)
+
+## Python
+### How to Slice Lists/Arrays and Tuples in Python
+
+So you've got an list, tuple or array and you want to get specific sets of sub-elements from it, without any long, drawn out for loops? **Slicing** can not only be used for lists, tuples or arrays, but custom data structures as well, with the slice object
+
+Example
+
+```python
+>>> a = [1, 2, 3, 4, 5, 6, 7, 8]
+```
+
+```python
+>>> a[1:4]
+[2, 3, 4]
+```
+There is also an optional second clause that we can add that allows us to set how the list's index will increment between the indexes that we've set.
+```python
+>>> a[1:4:2]
+[2, 4]
+```
+
+ That last colon tells Python that we'd like to choose our slicing increment. By default, Python sets this increment to **1**, but that extra colon at the end of the numbers allows us to specify what we want it to be.
+
+ ```python
+>>> a[::-1]
+[8, 7, 6, 5, 4, 3, 2, 1]
+ ```
+ Lists have a default bit of functionality when slicing. If there is no value before the first colon, it means to start at the beginning index of the list. If there isn't a value after the first colon, it means to go all the way to the end of the list. This saves us time so that we don't have to manually specify len(a) as the ending index.
+
+ Okay. And that -1 I snuck in at the end? It means to increment the index every time by -1, meaning it will traverse the list by going backwards. If you wanted the even indexes going backwards, you could skip every second element and set the iteration to -2. Simple.
+
+There is another form of syntax you can use that may be easier to understand. There are objects in Python called slice objects and the can be used in place of the colon syntax above.
+
+```python
+>>> a = [1, 2, 3, 4, 5]
+>>> sliceObj = slice(1, 3)
+>>> a[sliceObj]
+[2, 3]
+```
+
+### Reference
+
+1. [Python Central](https://www.pythoncentral.io/how-to-slice-listsarrays-and-tuples-in-python/)
