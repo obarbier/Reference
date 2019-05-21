@@ -1,7 +1,10 @@
 # Olivier's Reference Sheet
 If I google something more than once, it means that I did not take the proper time to learn everything about this
-thing. I am creating this sheet so that I don't fall in the bad habbit of googling everything. I will format this
-by categories/Technologies
+thing. I am creating this sheet so that I don't fall in the bad habbit of googling everything.
+
+
+Oh By the way check out my Developer analytic page, Brough to you by sourcerer
+<a href="https://sourcerer.io/obarbier"><img src="https://sourcerer.io/icons/logo-sharing.svg"></a>
 
 ## Content
 1. [R-language](## R-language)
