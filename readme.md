@@ -11,6 +11,7 @@ by categories/Technologies
 3. [Python](##Python)
   1. How to Slice Lists/Arrays and Tuples in Python
   2. unpack operator in Python
+4. [Path To CKA](kubernetes.md)
 
 ## R-language
 ### cut {base}
