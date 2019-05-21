@@ -3,17 +3,17 @@ If I google something more than once, it means that I did not take the proper ti
 thing. I am creating this sheet so that I don't fall in the bad habbit of googling everything.
 
 
-Oh By the way check out my Developer analytic page, Brough to you by sourcerer
-<a href="https://sourcerer.io/obarbier"><img src="https://sourcerer.io/icons/logo-sharing.svg"></a>
+
+<a href="https://sourcerer.io/obarbier"><img src="https://sourcerer.io/icons/logo-sharing.svg"></a> Oh By the way check out my Developer analytic page, Brough to you by sourcerer
 
 ## Content
-1. [R-language](## R-language)
-  1. cut {base}
-2. [GoLang](## GoLang)
-  1. Import
+1. [R-language](#R-language)
+  - cut {base}
+2. [GoLang](#GoLang)
+  - Import
 3. [Python](##Python)
-  1. How to Slice Lists/Arrays and Tuples in Python
-  2. unpack operator in Python
+  - How to Slice Lists/Arrays and Tuples in Python
+  - unpack operator in Python
 4. [Path To CKA](kubernetes.md)
 
 ## R-language
