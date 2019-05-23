@@ -4,7 +4,7 @@ thing. I am creating this sheet so that I don't fall in the bad habbit of googli
 
 
 
-<a href="https://sourcerer.io/obarbier"><img src="https://sourcerer.io/icons/logo-sharing.svg"></a> Oh By the way check out my Developer analytic page, Brough to you by sourcerer
+<a href="https://sourcerer.io/obarbier"><img src="https://sourcerer.io/icons/logo-sharing.svg"></a> Oh By the way check out my Developer analytic page, Brought to you by sourcerer
 
 ## Content
 1. [R-language](#R-language)
@@ -14,6 +14,7 @@ thing. I am creating this sheet so that I don't fall in the bad habbit of googli
 3. [Python](##Python)
   - How to Slice Lists/Arrays and Tuples in Python
   - unpack operator in Python
+  - [unitest pattern](python/unitest.md)
 4. [Path To CKA](kubernetes.md)
 
 ## R-language
