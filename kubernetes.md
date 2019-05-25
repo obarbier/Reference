@@ -9,6 +9,10 @@
 - Learn about Kubernetes Pods
 - Learn about Kubernetes Nodes
 - Troubleshoot deployed applications
+- Learn about a Service in Kubernetes
+- Understand how labels and LabelSelector objects relate to a Service
+- Expose an application outside a Kubernetes cluster using a Service
+
 
 ### Using Minikube to Create a Cluster
 **Kubernetes coordinates a highly available cluster of computers that are connected to work as a single unit.** The abstractions in Kubernetes allow you to deploy containerized applications to a cluster without tying them specifically to individual machines. To make use of this new model of deployment, applications need to be packaged in a way that decouples them from individual hosts: they need to be containerized. Containerized applications are more flexible and available than in past deployment models, where applications were installed directly onto specific machines as packages deeply integrated into the host. **Kubernetes automates the distribution and scheduling of application containers across a cluster in a more efficient way.** Kubernetes is an open-source platform and is production-ready.
@@ -96,7 +100,7 @@ Lastly, It depends on use case how you want to use these concepts or methodology
 
 ### Viewing Pods and Nodes
 
-<img src="https://d33wubrfki0l68.cloudfront.net/fe03f68d8ede9815184852ca2a4fd30325e5d15a/98064/docs/tutorials/kubernetes-basics/public/images/module_03_pods.svg">
+<img src="https://d33wubrfki0l68.cloudfronat.net/fe03f68d8ede9815184852ca2a4fd30325e5d15a/98064/docs/tutorials/kubernetes-basics/public/images/module_03_pods.svg">
 A **Pod**  is the atomic unit on the Kubernetes platform. It is a group of one or more application containers (such as Docker or rkt) and includes shared storage (volumes), IP address and information about how to run them. A Pod models an application-specific "logical host" and can contain different application containers which are relatively tightly coupled. When we create a Deployment on Kubernetes, that Deployment creates Pods with containers inside them (as opposed to creating containers directly).
 
 A Pod always runs on a Node. A **Node** is a worker machine in Kubernetes and may be either a virtual or a physical machine, depending on the cluster. Each Node is managed by the Master. A Node can have multiple pods, and the Kubernetes master automatically handles scheduling the pods across the Nodes in the cluster. The Master's automatic scheduling takes into account the available resources on each Node.
@@ -218,5 +222,7 @@ HOME=/root
 Or we can start a bash session like so (similarly to docker)
 ```
 olivier@obarbier:~$ kubectl exec -ti $POD_NAME bash
-root@kubernetes-bootcamp-b94cb9bff-tf9sg:/# 
+root@kubernetes-bootcamp-b94cb9bff-tf9sg:/#
 ```
+### Using a Service to Expose Your App
+Problem: Each Pod in a Kubernetes cluster has a unique IP address, even Pods on the same Node, so there needs to be a way of automatically reconciling changes among Pods so that your applications continue to function.(**Side thought**: [What would be some changes one need to do at pod level?](underConstruction.md) <sup>[1 -Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/)</sup>)
