@@ -16,6 +16,8 @@ thing. I am creating this sheet so that I don't fall in the bad habbit of googli
   - unpack operator in Python
   - [unitest pattern](python/unitest.md)
 4. [Path To CKA](kubernetes.md)
+5. Git
+  - git pull
 
 ## R-language
 ### cut {base}
@@ -207,3 +209,26 @@ myFun(**d)
 ### Reference
 1. [codeyarns](https://codeyarns.com/2012/04/26/unpack-operator-in-python/)
 2. [stackoverflow](https://stackoverflow.com/questions/11784860/why-does-this-python-dictionary-get-created-out-of-order-using-setdefault)
+
+## Git
+### Git pull
+The git pull command is used to fetch and download content from a remote repository and immediately update the local repository to match that content. The `git pull` command is actually a combination of two other commands, `git fetch` followed by `git merge`. In the first stage of operation git pull will execute a git fetch scoped to the local branch that HEAD is pointed at. Once the content is downloaded, git pull will enter a merge workflow. A new merge commit will be-created and HEAD updated to point at the new commit.
+
+
+But what is Git HEAD exactly?
+You can think of the HEAD as the "current branch". When you switch branches with git checkout, the HEAD revision changes to point to the tip of the new branch. It is possible for HEAD to refer to a specific revision that is not associated with a branch name. This situation is called a [detached HEAD](https://git-scm.com/docs/git-checkout#_detached_head).
+
+```
+$ cat .git/HEAD
+ref: refs/heads/master
+```
+### Example
+`git pull origin master` or `git pull`
+  - In this scenario, `git pull` will download all the changes from the point where the local and master diverged. In this example, that point is E. `git pull` will fetch the diverged remote commits which are A-B-C. The pull process will then create a new local merge commit (i.e H) containing the content of the new diverged remote commits.
+
+<img src="https://media.giphy.com/media/Wp11x8FCozuNWp8NAC/giphy.gif">
+
+
+### Reference
+1. [atlassian](https://www.atlassian.com/git/tutorials/syncing/git-pull)
+2. [stackoverflow](https://stackoverflow.com/questions/2304087/what-is-head-in-git)

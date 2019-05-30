@@ -108,3 +108,6 @@ Every Kubernetes Node runs at least:
 - Kubelet, a process responsible for communication between the Kubernetes Master and the Node; it manages the Pods and the containers running on a machine.
 - A container runtime (like Docker, rkt) responsible for pulling the container image from a registry, unpacking the container, and running the application.
 Containers should only be scheduled together in a single Pod if they are tightly coupled and need to share resources such as disk.
+
+## Reference
+1. [Kubernetes Blog](https://kubernetes.io/blog/)
