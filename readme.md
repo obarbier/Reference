@@ -226,10 +226,12 @@ ref: refs/heads/master
 - `git pull origin master` or `git pull`
 
  In this scenario, `git pull` will download all the changes from the point where the local and master diverged. In this example, that point is E. `git pull` will fetch the diverged remote commits which are A-B-C. The pull process will then create a new local merge commit (i.e H) containing the content of the new diverged remote commits.
+
   <img src="https://media.giphy.com/media/Wp11x8FCozuNWp8NAC/giphy.gif">
 - `git pull --rebase`
 
  A --rebase option can be passed to git pull to use a rebase merging strategy instead of a merge commit.A rebase pull does not create the new H commit. Instead, the rebase has copied the remote commits A--B--C and appended them to the local origin/master commit history. In other words, same as the previous pull Instead of using git merge to integrate the remote branch with the local one, use git rebase.
+ 
  <img src="https://media.giphy.com/media/S86R8k2Hf7epMfqGjX/giphy.gif">
 - `git pull --no-commit <remote>`
 
@@ -238,7 +240,7 @@ ref: refs/heads/master
 
   Similar to the default invocation, fetches the remote content but does not create a new merge commit.
 
-  
+
 ### Reference
 1. [atlassian](https://www.atlassian.com/git/tutorials/syncing/git-pull)
 2. [stackoverflow](https://stackoverflow.com/questions/2304087/what-is-head-in-git)
