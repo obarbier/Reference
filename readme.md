@@ -18,6 +18,7 @@ thing. I am creating this sheet so that I don't fall in the bad habbit of googli
 4. [Path To CKA](kubernetes.md)
 5. Git
   - git pull
+6. [NGINX](nginx/gettingStarted.md)
 
 ## R-language
 ### cut {base}
@@ -48,11 +49,30 @@ OrderCons$Period<-cut(OrderCons$ORDER_CREATION_DATE ,
                     breaks = ymd(c( "2018-04-28","2018-07-29","2018-10-28",
                                   "2019-01-27","2019-04-28")),
                     labels =c( "Q4FY18","Q1FY19","Q2FY19","Q3FY19"))
+
 ```
 #### Reference
 1. [rdocumentation](https://www.rdocumentation.org/packages/base/versions/3.6.0/topics/cut)
 2. [stackoverflow](https://stackoverflow.com/questions/45201474/customize-quarterly-dates-on-r)
 
+### seq.Date {base}
+The method for seq for objects of class class "Date" representing calendar dates.
+```
+seq(from, to, by, length.out = NULL, along.with = NULL, ...)
+```
+by can be specified in several ways.
+- A number, taken to be in days.
+- A object of class difftime
+- A character string, containing one of "day", "week", "month", "quarter" or "year". This can optionally be preceded by a (positive or negative) integer and a space, or followed by "s". See [seq.POSIXt](https://stat.ethz.ch/R-manual/R-devel/library/base/html/seq.POSIXt.html) for the details of "month".
+
+Example
+Create vector of past  12 months and convert it to character
+```
+from<-as.Date("2018/06/01")
+to<-from+364
+date_header<-seq(from, to ,by = "month")
+date_header<-format(date_header,"%B")
+```
 ## GoLang
 
 ### Import
@@ -231,7 +251,7 @@ ref: refs/heads/master
 - `git pull --rebase`
 
  A --rebase option can be passed to git pull to use a rebase merging strategy instead of a merge commit.A rebase pull does not create the new H commit. Instead, the rebase has copied the remote commits A--B--C and appended them to the local origin/master commit history. In other words, same as the previous pull Instead of using git merge to integrate the remote branch with the local one, use git rebase.
- 
+
  <img src="https://media.giphy.com/media/S86R8k2Hf7epMfqGjX/giphy.gif">
 - `git pull --no-commit <remote>`
 
