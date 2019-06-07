@@ -11,6 +11,7 @@ thing. I am creating this sheet so that I don't fall in the bad habbit of googli
   - cut {base}
 2. [GoLang](#GoLang)
   - Import
+  - [Create CLI, a Cobra/Viper implementation](go/cobraCli.md)
 3. [Python](##Python)
   - How to Slice Lists/Arrays and Tuples in Python
   - unpack operator in Python
