@@ -225,7 +225,223 @@ olivier@obarbier:~$ kubectl exec -ti $POD_NAME bash
 root@kubernetes-bootcamp-b94cb9bff-tf9sg:/#
 ```
 ### Using a Service to Expose Your App
-Problem: Each Pod in a Kubernetes cluster has a unique IP address, even Pods on the same Node, so there needs to be a way of automatically reconciling changes among Pods so that your applications continue to function.(**Side thought**: [What would be some changes one need to do at pod level?](underConstruction.md) <sup>[1 -Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/)</sup>)
+**Problem Statement**: Each Pod in a Kubernetes cluster has a unique IP address, even Pods on the same Node, so there needs to be a way of automatically reconciling changes among Pods so that your applications continue to function.(**Side thought**: [What would be some changes one need to do at pod level?](underConstruction.md) <sup>[1 -Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/)</sup>)
+
+value  |  Description
+--|--
+**Pending**  |  The Pod has been accepted by the Kubernetes system, but one or more of the Container images has not been created. This includes time before being scheduled as well as time spent downloading images over the network, which could take a while.
+**Running**  |  The Pod has been bound to a node, and all of the Containers have been created. At least one Container is still running, or is in the process of starting or restarting.
+**Succeeded**  |  All Containers in the Pod have terminated in success, and will not be restarted.
+**Failed**  |  All Containers in the Pod have terminated, and at least one Container has terminated in failure. That is, the Container either exited with non-zero status or was terminated by the system
+**Unknown**  |  For some reason the state of the Pod could not be obtained, typically due to an error in communicating with the host of the Pod.
+Table| 1
+
+
+Kubernetes Pods are mortal. Pods in fact have a lifecycle<sub>Table 1</sub> . When a worker node dies, the Pods running on the Node are also lost. A ReplicaSet might then dynamically drive the cluster back to desired state via creation of new Pods to keep your application running. A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods. A Service is defined using YAML (preferred) or JSON, like all Kubernetes objects. The set of Pods targeted by a Service is usually determined by a LabelSelector (see below for why you might want a Service without including selector in the spec). A Service in Kubernetes is an abstraction which defines a logical set of Pods and a policy by which to access them. Services enable a loose coupling between dependent Pods. A Service is defined using YAML (preferred) or JSON, like all Kubernetes objects. The set of Pods targeted by a Service is usually determined by a LabelSelector . Although each Pod has a unique IP address, those IPs are not exposed outside the cluster without a Service. Services allow your applications to receive traffic. Services can be exposed in different ways by specifying a type in the ServiceSpec:
+- ClusterIP (default) - Exposes the Service on an internal IP in the cluster. This type makes the Service only reachable from within the cluster.
+- NodePort - Exposes the Service on the same port of each selected Node in the cluster using NAT. Makes a Service accessible from outside the cluster using <NodeIP>:<NodePort>. Superset of ClusterIP.
+- LoadBalancer - Creates an external load balancer in the current cloud (if supported) and assigns a fixed, external IP to the Service. Superset of NodePort.
+- ExternalName - Exposes the Service using an arbitrary name (specified by externalName in the spec) by returning a CNAME record with the name. No proxy is used. This type requires v1.7 or higher of kube-dns.
+
+Additionally, note that there are some use cases with Services that involve not defining selector in the spec. A Service created without selector will also not create the corresponding Endpoints object. This allows users to manually map a Service to specific endpoints. Another possibility why there may be no selector is you are strictly using type: ExternalName.
+
+
+
+<img src="https://d33wubrfki0l68.cloudfront.net/cc38b0f3c0fd94e66495e3a4198f2096cdecd3d5/ace10/docs/tutorials/kubernetes-basics/public/images/module_04_services.svg">
+
+A Service routes traffic across a set of Pods. Services are the abstraction that allow pods to die and replicate in Kubernetes without impacting your application. Discovery and routing among dependent Pods (such as the frontend and backend components in an application) is handled by Kubernetes Services.
+
+Services match a set of Pods using labels and selectors, a grouping primitive that allows logical operation on objects in Kubernetes. Labels are key/value pairs attached to objects and can be used in any number of ways:
+- Designate objects for development, test, and production
+- Embed version tags
+- Classify an object using tags
+
+<img src="https://d33wubrfki0l68.cloudfront.net/b964c59cdc1979dd4e1904c25f43745564ef6bee/f3351/docs/tutorials/kubernetes-basics/public/images/module_04_labels.svg">
+
+Labels can be attached to objects at creation time or later on.you can create a Service at the same time you create a Deployment by using `--expose` in kubectl.
+
+Example:
+
+From previous module we have
+```
+olivier@obarbier:~$ kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   5m25s
+olivier@obarbier:~$ kubectl get pods
+NAME                                  READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-b94cb9bff-2z7l9   1/1     Running   0          86s
+olivier@obarbier:~$ kubectl get deployments
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+kubernetes-bootcamp   1/1     1            1           2m14s
+
+```
+
+To create a service let's run the following command
+
+``kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+``
+1. Expose Service by specifying the deployment resources
+2. identity type to expose
+3. select port to access service.
+
+We have now a running Service called kubernetes-bootcamp. Here we see that the Service received a unique cluster-IP, an internal port and an external-IP (the IP of the Node).
+```
+olivier@obarbier:~$ kubectl get services
+NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes            ClusterIP   10.96.0.1       <none>        443/TCP          14m
+kubernetes-bootcamp   NodePort    10.96.237.241   <none>        8080:30314/TCP   4m59s
+
+```
+```
+olivier@obarbier:~$ kubectl describe services/kubernetes-bootcamp
+Name:                     kubernetes-bootcamp
+Namespace:                default
+Labels:                   run=kubernetes-bootcamp
+Annotations:              <none>
+Selector:                 run=kubernetes-bootcamp
+Type:                     NodePort
+IP:                       10.96.237.241
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  30314/TCP
+Endpoints:                172.17.0.5:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+```
+
+How do we use labels Now
+
+The Deployment created automatically a label for our Pod. i.e.
+```
+olivier@obarbier:~$ kubectl describe deployments
+Name:                   kubernetes-bootcamp
+Namespace:              default
+CreationTimestamp:      Tue, 11 Jun 2019 19:41:36 -0400
+Labels:                 run=kubernetes-bootcamp
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               run=kubernetes-bootcamp
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  run=kubernetes-bootcamp
+  Containers:
+   kubernetes-bootcamp:
+    Image:        gcr.io/google-samples/kubernetes-bootcamp:v1
+    Port:         8080/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   kubernetes-bootcamp-b94cb9bff (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  15m   deployment-controller  Scaled up replica set kubernetes-bootcamp-b94cb9bff to 1
+```
+et’s use this label to query our list of Pods. We’ll use the kubectl get pods command with -l as a parameter, followed by the label values. You can do the same to list the existing services
+```
+olivier@obarbier:~$ kubectl get pods -l run=kubernetes-bootcamp
+NAME                                  READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-b94cb9bff-2z7l9   1/1     Running   0          17m
+olivier@obarbier:~$ kubectl get services -l run=kubernetes-bootcamp
+NAME                  TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes-bootcamp   NodePort   10.96.237.241   <none>        8080:30314/TCP   13m
+```
+
+Now let's change labels
+```
+olivier@obarbier:~$ export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+olivier@obarbier:~$ echo Name of the Pod: $POD_NAME
+Name of the Pod: kubernetes-bootcamp-b94cb9bff-2z7l9
+olivier@obarbier:~$ kubectl label pod $POD_NAME app=v1
+pod/kubernetes-bootcamp-b94cb9bff-2z7l9 labeled
+olivier@obarbier:~$ kubectl describe pods $POD_NAME
+Name:               kubernetes-bootcamp-b94cb9bff-2z7l9
+Namespace:          default
+Priority:           0
+PriorityClassName:  <none>
+Node:               minikube/10.0.2.15
+Start Time:         Tue, 11 Jun 2019 19:41:36 -0400
+Labels:             app=v1
+                    pod-template-hash=b94cb9bff
+                    run=kubernetes-bootcamp
+Annotations:        <none>
+Status:             Running
+IP:                 172.17.0.5
+Controlled By:      ReplicaSet/kubernetes-bootcamp-b94cb9bff
+Containers:
+  kubernetes-bootcamp:
+    Container ID:   docker://b44ce34e044e75ab753824f50e13a3bf30d873be85cb34e1c3a7db14e5ea402b
+    Image:          gcr.io/google-samples/kubernetes-bootcamp:v1
+    Image ID:       docker-pullable://gcr.io/google-samples/kubernetes-bootcamp@sha256:0d6b8ee63bb57c5f5b6156f446b3bc3b3c143d233037f3a2f00e279c8fcc64af
+    Port:           8080/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Tue, 11 Jun 2019 19:42:13 -0400
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-xcmdg (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-xcmdg:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-xcmdg
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  20m   default-scheduler  Successfully assigned default/kubernetes-bootcamp-b94cb9bff-2z7l9 to minikube
+  Normal  Pulling    20m   kubelet, minikube  Pulling image "gcr.io/google-samples/kubernetes-bootcamp:v1"
+  Normal  Pulled     20m   kubelet, minikube  Successfully pulled image "gcr.io/google-samples/kubernetes-bootcamp:v1"
+  Normal  Created    20m   kubelet, minikube  Created container kubernetes-bootcamp
+  Normal  Started    20m   kubelet, minikube  Started container kubernetes-bootcamp
+olivier@obarbier:~$ kubectl get pods -l app=v1
+NAME                                  READY   STATUS    RESTARTS   AGE
+kubernetes-bootcamp-b94cb9bff-2z7l9   1/1     Running   0          21m
+```
+How to then delete a service
+
+`kubectl delete service -l run=kubernetes-bootcamp`
+
+```
+olivier@obarbier:~$ kubectl delete service -l run=kubernetes-bootcamp
+service "kubernetes-bootcamp" deleted
+olivier@obarbier:~$ kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   27m
+```
+trying to connect using IP and port result in
+```
+olivier@obarbier:~$ curl $(minikube ip):$NODE_PORT
+curl: (7) Failed to connect to 192.168.99.100 port 80: Connection refused
+```
+
+however this is still Running
+```
+olivier@obarbier:~$ kubectl exec -ti $POD_NAME curl localhost:8080
+Hello Kubernetes bootcamp! | Running on: kubernetes-bootcamp-b94cb9bff-2z7l9 | v=1
+```
+
 
 
 ## Reference
