@@ -48,15 +48,11 @@ Viper does the following for you:
 
 ## Cli Description
 ----------------------------
-We will create a Todo CLI app in go it will perform the following
-1. Create to do : `--create -c <string>`
-2. get all todo : `--getAll -G`
-3. get todo :`--get -g <id>`
-4. Delete to do : `--delete -d <id>`
-5. Delete all to do : `--deleteAll -D `
-6. Update todo : `--update -u <id> <string>`
-7. get status : `--getStatus -s`
-8. tag todo :
+We will create a Todo CLI app in go it will perform the following basic CRUD opeeration
+1. Create to do : `create <string>`
+2. get  todo : `read <id>`
+3. Update to do : `update -i <id> <string>` -a
+5. Delete to do : `delete <id>`
 
 ## Let's code
 ----------------
@@ -69,7 +65,7 @@ We will create a Todo CLI app in go it will perform the following
   1. Had to fix issue by installing mingw-w64
   2. setup sqlite in init code
 4. Adding create task
-  1. set up Viper
+  1. cobra add name
 
 ## reference
 ------------------
@@ -79,3 +75,4 @@ We will create a Todo CLI app in go it will perform the following
 4. [GoPath vs GoRoot](https://stackoverflow.com/questions/7970390/what-should-be-the-values-of-gopath-and-goroot)
 5. [mingw-w64](https://sourceforge.net/projects/mingw-w64/files/latest/download)
 6. [Windows: "gcc": executable file not found in %PATH% ](https://github.com/mattn/go-sqlite3/issues/467)
+7. [fmt cheat sheet](https://yourbasic.org/golang/fmt-printf-reference-cheat-sheet/)
