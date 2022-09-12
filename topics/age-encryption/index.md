@@ -93,9 +93,7 @@ Two types of recipients
 
 
 
-####
-
-## Glossery
+## Glossary
 
 * **CSPRNG** : cryptographically secure pseudorandom number generator  [LINK](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator)
 * **Bech32 with HRP** : Bech32 is a checksummed base32 format. It is being used in cryptocurrencies development (bitcoin, cardano,…) A Bech32 is consist of three parts, the human readable part(hrp) the separator (always “1”) and the data part.  [LINK](http://trikalabs.com/bech32-algorithm/#:~:text=A%20Bech32%20is%20consist%20of%20three%20parts%2C%20the,%2B%201%20%2B%20Transformed%20%28input%20data%20%2B%20checksum%29.)
