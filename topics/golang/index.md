@@ -1,0 +1,1 @@
+* [config pattern](config-pattern.md)
