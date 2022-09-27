@@ -16,7 +16,9 @@ thing. I am creating this sheet so that I don't fall in the bad habbit of googli
 5. Git
   - git pull
 6. [NGINX](nginx/gettingStarted.md)
-6. [Topics](topics/index.md)
+7. [Topics](topics/index.md)
+8. [Terminology](./key-concepts.md)
+
 
 ## R-language
 ### cut {base}
