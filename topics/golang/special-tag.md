@@ -1,4 +1,4 @@
-## Definition
+## +build tag_name
 In Go, a build tag, or a build constraint, is an identifier added to a piece of code that determines when the file should be included in a package during the build process. This allows you to build different versions of your Go application from the same source code and to toggle between them in a fast and organized manner. Many developers use build tags to improve the workflow of building cross-platform compatible applications, such as programs that require code changes to account for variances between different operating systems. Build tags are also used for integration testing, allowing you to quickly switch between the integrated code and the code with a mock service or stub, and for differing levels of feature sets within an application.
 
 base code:
@@ -36,6 +36,8 @@ Output
 Adding the Pro Features With go build
 
 ```
+// +build pro
+
 // -> prog.go
 package main
 
@@ -50,7 +52,7 @@ func init() {
 output
 
 ```
-go build
+go build -tags pro
 ./app
 
 Output
@@ -61,6 +63,7 @@ Output
 
 ```
 
+## //go:generate 
 
 
 ## Glossary
@@ -68,5 +71,6 @@ Output
 
 ## Reference
 * [Customizing Go Binaries with Build Tags](https://www.digitalocean.com/community/tutorials/customizing-go-binaries-with-build-tags)
+* [A comprehensive guide to go generate](https://eli.thegreenplace.net/2021/a-comprehensive-guide-to-go-generate/)
 
 
