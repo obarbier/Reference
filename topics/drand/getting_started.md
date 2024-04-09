@@ -1,3 +1,0 @@
-## Definition
-
-A drand network is made up of a set number of nodes running the drand protocol. Before generating random numbers, they all agree on a threshold parameter. Each node creates a signature, and random numbers are created by each node broadcasting a part of their signature to the rest of the network. Each node waits and collects these signatures until it has enough signatures to match the threshold parameter, then this node can create the final signature. The final signature is a regular Boneh–Lynn–Shacham signature that can be verified against by the rest of the network. If that signature is correct, then the randomness is simply the hash of that signature.

@@ -1,5 +1,0 @@
-## Definition
-
-## Glossary
-
-## Reference
